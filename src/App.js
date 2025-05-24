@@ -1,24 +1,59 @@
 import logo from './logo.svg';
 import './App.css';
+import React from "react";
+import purin from './purin.png';
+import { useEffect, useState } from 'react';
 
 function App() {
+
+
+  function UpdateImage({selectedFile}) {
+
+    return <a> <p></p><img src = {selectedFile} style = {{maxHeight: "400px"}}/> </a>;
+
+  }
+  function ImageUploader() {
+    const fileInputRef = React.useRef(null);
+    const [fileURL, setFileURL] = useState(null);
+  
+    const handleClick = () => {
+      fileInputRef.current?.click();
+    };
+  
+    const handleImageChange = (event) => {
+      if (event.target.files && event.target.files[0]) {
+        const file = (event.target.files[0]);
+        setFileURL(URL.createObjectURL(file));
+      }
+    };
+  
+  
+    return (
+      <>
+        <button type="button" onClick={handleClick} style = {{borderRadius: "20px", fontSize: "150%", 
+          fontFamily: "courier", fontWeight: "bold", padding: "20px", borderWidth: "10px", backgroundColor: "#ffb56e",
+          borderColor: "#c05a3d", borderStyle: "solid"
+        }}>
+          upload!!
+        </button>
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleImageChange}
+          style={{ display: 'none' }}
+        />
+        {fileURL && <UpdateImage selectedFile={fileURL} />}
+      </>
+    );
+  }
+  
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main style = {{margin: "20px", fontFamily: "courier"} }>
+      <h1>i can read your mind and/or drink your blood <img src = {purin} style = {{maxHeight: "100px"}}/></h1>
+      <ImageUploader />
+    </main>
   );
 }
 
