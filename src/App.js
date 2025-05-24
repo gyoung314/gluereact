@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import React from "react";
 import purin from './purin.png';
+import {uploadFile} from './UploadFile.tsx';
 import { useEffect, useState } from 'react';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       if (event.target.files && event.target.files[0]) {
         const file = (event.target.files[0]);
         setFileURL(URL.createObjectURL(file));
+        uploadFile(file);
       }
     };
   
