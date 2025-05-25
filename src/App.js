@@ -7,7 +7,31 @@ import { useEffect, useState } from 'react';
 
 function App() {
 
+  const [text, setText] = useState("");
+  const [fileURL, setFileURL] = useState(null);
 
+
+  function TextFetcher({ text }) {
+    return <pre style = {{margin: "20px", fontFamily: "courier", fontSize: "150%",
+      fontWeight: "bold",
+    } }>{text}</pre>;
+  }
+  
+  const fetchText = async () => {
+    try {
+      const res = await fetch("https://ae238w0og8.execute-api.us-east-1.amazonaws.com/translate");
+      if (res.ok) {
+        const wrapper = await res.json();
+        setText(wrapper.content);
+      } else {
+        console.error("Failed to fetch text");
+      }
+    } catch (err) {
+      console.error("Error fetching text:", err);
+    }
+  };
+
+  
   function UpdateImage({selectedFile}) {
 
     return <a> <p></p><img src = {selectedFile} style = {{maxHeight: "400px"}}/> </a>;
@@ -15,7 +39,6 @@ function App() {
   }
   function ImageUploader() {
     const fileInputRef = React.useRef(null);
-    const [fileURL, setFileURL] = useState(null);
   
     const handleClick = () => {
       fileInputRef.current?.click();
@@ -42,7 +65,12 @@ function App() {
           type="file"
           accept="image/*"
           ref={fileInputRef}
-          onChange={handleImageChange}
+          onChange={(e) => {
+            handleImageChange(e);
+            setTimeout(() => {
+              fetchText();
+            }, 5000); // wait 5 seconds (adjust as needed)
+                  }}
           style={{ display: 'none' }}
         />
         {fileURL && <UpdateImage selectedFile={fileURL} />}
@@ -55,7 +83,8 @@ function App() {
     <main style = {{margin: "20px", fontFamily: "courier"} }>
       <h1>i can read your mind and/or drink your blood <img src = {purin} style = {{maxHeight: "100px"}}/></h1>
       <ImageUploader />
-    </main>
+      <TextFetcher text={text} />
+      </main>
   );
 }
 
